@@ -1,13 +1,9 @@
 package entity
 
-import (
-	"gorm.io/gorm"
-)
-
 type Item struct {
-	gorm.Model
-	ItemCode    string `gorm:"not null;type:varchar(255)"`
-	Quantity    uint   `gorm:"not null;type:int"`
-	Description string `gorm:"not null;type:varchar(255)"`
-	OrderID     uint   `gorm:"not null;type:int"`
+	Base
+	ItemCode    string `gorm:"not null;type:varchar(255)" json:"item_code"`
+	Quantity    uint   `gorm:"not null;type:int"          json:"quantity"`
+	Description string `gorm:"not null;type:varchar(255)" json:"description"`
+	OrderID     uint   `gorm:"not null;type:int"          json:"order_id"`
 }

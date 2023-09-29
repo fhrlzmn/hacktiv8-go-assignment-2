@@ -2,13 +2,11 @@ package entity
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Order struct {
-	gorm.Model
-	CustomerName string `gorm:"not null;type:varchar(255)"`
-	OrderedAt    time.Time
-	Items        []Item `gorm:"constraint:OnUpdate:CASCADE"`
+	Base
+	CustomerName string    `gorm:"not null;type:varchar(255)"  json:"customer_name"`
+	OrderedAt    time.Time `                                   json:"ordered_at"`
+	Items        []Item    `gorm:"constraint:OnUpdate:CASCADE" json:"items"`
 }
