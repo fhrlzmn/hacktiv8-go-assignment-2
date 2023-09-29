@@ -5,7 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"fhrlzmn/hacktiv8-go/assignment-2/infrastructure/database"
+	"fhrlzmn/hacktiv8-go/assignment-2/cmd/app"
 )
 
 func init() {
@@ -15,5 +15,5 @@ func init() {
 }
 
 func main() {
-	database.Init()
+	app.Start()
 }

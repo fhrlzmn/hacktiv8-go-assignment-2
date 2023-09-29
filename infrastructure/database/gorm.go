@@ -43,7 +43,7 @@ func Migration() {
 }
 
 func GetInstance() *gorm.DB {
-	if db != nil {
+	if db == nil {
 		log.Panic("Database instance is not initialized")
 	}
 
