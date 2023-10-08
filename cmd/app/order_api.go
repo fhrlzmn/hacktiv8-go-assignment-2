@@ -7,11 +7,6 @@ import (
 
 func Start() {
 	database.Init()
-
-	db := database.GetInstance() // db
 	gin := server.Init()
-
-	_ = db
-
 	gin.Run() // listen and serve on port 8080 if env PORT not set
 }
