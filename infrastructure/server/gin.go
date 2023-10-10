@@ -30,6 +30,7 @@ func Init() *gin.Engine {
 	{
 		order := r.Group("/orders")
 		order.POST("/", orderHandler.Create)
+		order.GET("/:orderId", orderHandler.GetById)
 	}
 
 	return r

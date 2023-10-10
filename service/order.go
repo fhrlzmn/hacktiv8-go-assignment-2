@@ -10,6 +10,7 @@ import (
 
 type OrderService interface {
 	Create(order entity.Order, items []entity.Item) (*dto.ApiResponse[any], error)
+	GetById(orderId int) (*dto.ApiResponse[any], error)
 }
 
 type OrderServiceImpl struct {
@@ -32,6 +33,21 @@ func (os *OrderServiceImpl) Create(
 	response := dto.ApiResponse[any]{
 		StatusCode: http.StatusCreated,
 		Message:    "Order created successfully",
+		Data:       order,
+	}
+
+	return &response, nil
+}
+
+func (os *OrderServiceImpl) GetById(orderId int) (*dto.ApiResponse[any], error) {
+	order, err := os.orderRepository.GetById(orderId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := dto.ApiResponse[any]{
+		StatusCode: http.StatusOK,
+		Message:    "Order retrieved successfully",
 		Data:       order,
 	}
 

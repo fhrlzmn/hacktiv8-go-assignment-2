@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -12,6 +13,7 @@ import (
 
 type OrderHandler interface {
 	Create(ctx *gin.Context)
+	GetById(ctx *gin.Context)
 }
 
 type OrderHandlerImpl struct {
@@ -45,6 +47,27 @@ func (oh *OrderHandlerImpl) Create(ctx *gin.Context) {
 	response, err := oh.service.Create(order, items)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errs.InternalServerError("Failed to create order"))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (oh *OrderHandlerImpl) GetById(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+
+	orderIdInt, err := strconv.Atoi(orderId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errs.BadRequest("Invalid order ID"))
+		return
+	}
+
+	response, err := oh.service.GetById(orderIdInt)
+	if err != nil {
+		ctx.JSON(
+			http.StatusNotFound,
+			errs.NotFound("Order with ID "+orderId+" not found"),
+		)
 		return
 	}
 

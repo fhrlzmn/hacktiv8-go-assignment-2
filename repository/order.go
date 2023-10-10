@@ -10,6 +10,7 @@ import (
 
 type OrderRepository interface {
 	Create(order entity.Order, items []entity.Item) (entity.Order, error)
+	GetById(orderId int) (entity.Order, error)
 }
 
 type OrderRepositoryImpl struct {
@@ -32,6 +33,20 @@ func (or *OrderRepositoryImpl) Create(
 		}
 
 		if err := tx.Create(&order).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return order, err
+}
+
+func (or *OrderRepositoryImpl) GetById(orderId int) (entity.Order, error) {
+	var order entity.Order
+
+	err := or.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Preload("Items").First(&order, orderId).Error; err != nil {
 			return err
 		}
 
