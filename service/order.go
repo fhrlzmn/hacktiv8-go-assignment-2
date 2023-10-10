@@ -11,6 +11,7 @@ import (
 type OrderService interface {
 	Create(order entity.Order, items []entity.Item) (*dto.ApiResponse[any], error)
 	GetById(orderId int) (*dto.ApiResponse[any], error)
+	Delete(orderId int) (*dto.ApiResponse[any], error)
 }
 
 type OrderServiceImpl struct {
@@ -49,6 +50,21 @@ func (os *OrderServiceImpl) GetById(orderId int) (*dto.ApiResponse[any], error) 
 		StatusCode: http.StatusOK,
 		Message:    "Order retrieved successfully",
 		Data:       order,
+	}
+
+	return &response, nil
+}
+
+func (os *OrderServiceImpl) Delete(orderId int) (*dto.ApiResponse[any], error) {
+	err := os.orderRepository.Delete(orderId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := dto.ApiResponse[any]{
+		StatusCode: http.StatusOK,
+		Message:    "Order deleted successfully",
+		Data:       nil,
 	}
 
 	return &response, nil

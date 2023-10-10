@@ -6,6 +6,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	"fhrlzmn/hacktiv8-go/assignment-2/config"
 	"fhrlzmn/hacktiv8-go/assignment-2/domain/entity"
@@ -32,7 +33,9 @@ func Connect() {
 		dbConfig.Port,
 	)
 
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}

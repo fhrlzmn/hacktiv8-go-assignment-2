@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -14,6 +15,7 @@ import (
 type OrderHandler interface {
 	Create(ctx *gin.Context)
 	GetById(ctx *gin.Context)
+	Delete(ctx *gin.Context)
 }
 
 type OrderHandlerImpl struct {
@@ -27,6 +29,8 @@ func OrderHandlerInit(service service.OrderService) *OrderHandlerImpl {
 func (oh *OrderHandlerImpl) Create(ctx *gin.Context) {
 	order := entity.Order{}
 	items := []entity.Item{}
+
+	fmt.Println(order.OrderedAt)
 
 	if err := ctx.ShouldBindJSON(&order); err != nil {
 		ctx.JSON(http.StatusBadRequest, errs.BadRequest("Invalid request body"))
@@ -63,6 +67,27 @@ func (oh *OrderHandlerImpl) GetById(ctx *gin.Context) {
 	}
 
 	response, err := oh.service.GetById(orderIdInt)
+	if err != nil {
+		ctx.JSON(
+			http.StatusNotFound,
+			errs.NotFound("Order with ID "+orderId+" not found"),
+		)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (oh *OrderHandlerImpl) Delete(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+
+	orderIdInt, err := strconv.Atoi(orderId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errs.BadRequest("Invalid order ID"))
+		return
+	}
+
+	response, err := oh.service.Delete(orderIdInt)
 	if err != nil {
 		ctx.JSON(
 			http.StatusNotFound,

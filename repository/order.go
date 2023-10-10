@@ -11,6 +11,7 @@ import (
 type OrderRepository interface {
 	Create(order entity.Order, items []entity.Item) (entity.Order, error)
 	GetById(orderId int) (entity.Order, error)
+	Delete(orderId int) error
 }
 
 type OrderRepositoryImpl struct {
@@ -54,4 +55,22 @@ func (or *OrderRepositoryImpl) GetById(orderId int) (entity.Order, error) {
 	})
 
 	return order, err
+}
+
+func (or *OrderRepositoryImpl) Delete(orderId int) error {
+	var order entity.Order
+
+	err := or.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.First(&order, orderId).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Select("Items").Delete(&order).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return err
 }
