@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// Order represents the order entity
 type Order struct {
 	Base
 	CustomerName string    `gorm:"not null;type:varchar(255)"                     json:"customer_name"`

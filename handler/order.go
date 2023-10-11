@@ -26,6 +26,15 @@ func OrderHandlerInit(service service.OrderService) *OrderHandlerImpl {
 	return &OrderHandlerImpl{service}
 }
 
+// Create Order godoc
+// @Summary Create an order
+// @Description Create an order with the input payload
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param order body dto.OrderRequest true "Order Payload"
+// @Success 201 {object} entity.Order
+// @Router /orders [post]
 func (oh *OrderHandlerImpl) Create(ctx *gin.Context) {
 	order := entity.Order{}
 	items := []entity.Item{}
@@ -55,6 +64,15 @@ func (oh *OrderHandlerImpl) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// Get Order by ID godoc
+// @Summary Get an order by id
+// @Description Get an order by id
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param orderId path int true "Order ID"
+// @Success 200 {object} entity.Order
+// @Router /orders/{orderId} [get]
 func (oh *OrderHandlerImpl) GetById(ctx *gin.Context) {
 	orderId := ctx.Param("orderId")
 
@@ -76,6 +94,16 @@ func (oh *OrderHandlerImpl) GetById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// Update Order godoc
+// @Summary Update an order
+// @Description Update an order with the input payload
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param orderId path int true "Order ID"
+// @Param order body dto.OrderRequest true "Order Payload"
+// @Success 200 {object} entity.Order
+// @Router /orders/{orderId} [put]
 func (oh *OrderHandlerImpl) Update(ctx *gin.Context) {
 	orderId := ctx.Param("orderId")
 
@@ -103,6 +131,15 @@ func (oh *OrderHandlerImpl) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// Delete Order godoc
+// @Summary Delete an order
+// @Description Delete an order by id
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param orderId path int true "Order ID"
+// @Success 200 {object} string
+// @Router /orders/{orderId} [delete]
 func (oh *OrderHandlerImpl) Delete(ctx *gin.Context) {
 	orderId := ctx.Param("orderId")
 
