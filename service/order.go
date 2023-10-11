@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
 
 	"fhrlzmn/hacktiv8-go/assignment-2/domain/dto"
@@ -9,7 +10,7 @@ import (
 )
 
 type OrderService interface {
-	Create(order entity.Order, items []entity.Item) (*dto.ApiResponse[any], error)
+	Create(order entity.Order) (*dto.ApiResponse[any], error)
 	GetById(orderId int) (*dto.ApiResponse[any], error)
 	Update(orderId int, order entity.Order) (*dto.ApiResponse[any], error)
 	Delete(orderId int) (*dto.ApiResponse[any], error)
@@ -25,9 +26,8 @@ func OrderServiceInit(orderRepository repository.OrderRepository) *OrderServiceI
 
 func (os *OrderServiceImpl) Create(
 	order entity.Order,
-	items []entity.Item,
 ) (*dto.ApiResponse[any], error) {
-	_, err := os.orderRepository.Create(order, items)
+	newOrder, err := os.orderRepository.Create(order)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (os *OrderServiceImpl) Create(
 	response := dto.ApiResponse[any]{
 		StatusCode: http.StatusCreated,
 		Message:    "Order created successfully",
-		Data:       order,
+		Data:       newOrder,
 	}
 
 	return &response, nil
@@ -79,7 +79,7 @@ func (os *OrderServiceImpl) Delete(orderId int) (*dto.ApiResponse[any], error) {
 
 	response := dto.ApiResponse[any]{
 		StatusCode: http.StatusOK,
-		Message:    "Order deleted successfully",
+		Message:    fmt.Sprintf("Order with ID %d deleted successfully", orderId),
 		Data:       nil,
 	}
 

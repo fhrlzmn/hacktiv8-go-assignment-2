@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -31,8 +30,6 @@ func (oh *OrderHandlerImpl) Create(ctx *gin.Context) {
 	order := entity.Order{}
 	items := []entity.Item{}
 
-	fmt.Println(order.OrderedAt)
-
 	if err := ctx.ShouldBindJSON(&order); err != nil {
 		ctx.JSON(http.StatusBadRequest, errs.BadRequest("Invalid request body"))
 		return
@@ -49,7 +46,7 @@ func (oh *OrderHandlerImpl) Create(ctx *gin.Context) {
 		return
 	}
 
-	response, err := oh.service.Create(order, items)
+	response, err := oh.service.Create(order)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errs.InternalServerError("Failed to create order"))
 		return
