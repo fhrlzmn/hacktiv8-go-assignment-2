@@ -13,6 +13,17 @@ definitions:
     - item_code
     - quantity
     type: object
+  dto.ItemResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      item_code:
+        type: string
+      quantity:
+        type: integer
+    type: object
   dto.OrderRequest:
     properties:
       customer_name:
@@ -28,6 +39,28 @@ definitions:
     - customer_name
     - items
     - ordered_at
+    type: object
+  dto.OrderResponse:
+    properties:
+      customer_name:
+        type: string
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/dto.ItemResponse'
+        type: array
+      ordered_at:
+        type: string
+    type: object
+  dto.OrdersResponse:
+    properties:
+      customer_name:
+        type: string
+      id:
+        type: integer
+      item_count:
+        type: integer
     type: object
   entity.Item:
     properties:
@@ -75,6 +108,22 @@ info:
   version: 1.0.0
 paths:
   /orders:
+    get:
+      consumes:
+      - application/json
+      description: Get all Orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.OrdersResponse'
+            type: array
+      summary: Get all Orders
+      tags:
+      - orders
     post:
       consumes:
       - application/json
@@ -92,7 +141,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/entity.Order'
+            $ref: '#/definitions/dto.OrderResponse'
       summary: Create an order
       tags:
       - orders
@@ -159,7 +208,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/entity.Order'
+            $ref: '#/definitions/dto.OrderResponse'
       summary: Update an order
       tags:
       - orders

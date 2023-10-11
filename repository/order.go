@@ -8,6 +8,7 @@ import (
 
 type OrderRepository interface {
 	Create(order entity.Order) (entity.Order, error)
+	GetAll() ([]entity.Order, error)
 	GetById(orderId int) (entity.Order, error)
 	Update(orderId int, updatedOrder entity.Order) (entity.Order, error)
 	Delete(orderId int) error
@@ -31,6 +32,20 @@ func (or *OrderRepositoryImpl) Create(order entity.Order) (entity.Order, error) 
 	})
 
 	return order, err
+}
+
+func (or *OrderRepositoryImpl) GetAll() ([]entity.Order, error) {
+	var orders []entity.Order
+
+	err := or.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Preload("Items").Find(&orders).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return orders, err
 }
 
 func (or *OrderRepositoryImpl) GetById(orderId int) (entity.Order, error) {

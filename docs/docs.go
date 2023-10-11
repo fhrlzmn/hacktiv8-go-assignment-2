@@ -24,6 +24,30 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/orders": {
+            "get": {
+                "description": "Get all Orders",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get all Orders",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.OrdersResponse"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create an order with the input payload",
                 "consumes": [
@@ -51,7 +75,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/entity.Order"
+                            "$ref": "#/definitions/dto.OrderResponse"
                         }
                     }
                 }
@@ -122,7 +146,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entity.Order"
+                            "$ref": "#/definitions/dto.OrderResponse"
                         }
                     }
                 }
@@ -179,6 +203,23 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ItemResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "item_code": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.OrderRequest": {
             "type": "object",
             "required": [
@@ -199,6 +240,40 @@ const docTemplate = `{
                 "ordered_at": {
                     "type": "string",
                     "example": "2021-01-01T00:00:00+07:00"
+                }
+            }
+        },
+        "dto.OrderResponse": {
+            "type": "object",
+            "properties": {
+                "customer_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ItemResponse"
+                    }
+                },
+                "ordered_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.OrdersResponse": {
+            "type": "object",
+            "properties": {
+                "customer_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "item_count": {
+                    "type": "integer"
                 }
             }
         },

@@ -26,6 +26,28 @@ type ItemResponse struct {
 	Description string `json:"description"`
 }
 
+type OrdersResponse struct {
+	ID           uint   `json:"id"`
+	CustomerName string `json:"customer_name"`
+	ItemCount    int    `json:"item_count"`
+}
+
+func GetOrdersResponse(orders []entity.Order) []OrdersResponse {
+	var ordersResponse []OrdersResponse
+
+	for _, order := range orders {
+		itemCount := len(order.Items)
+
+		ordersResponse = append(ordersResponse, OrdersResponse{
+			ID:           order.ID,
+			CustomerName: order.CustomerName,
+			ItemCount:    itemCount,
+		})
+	}
+
+	return ordersResponse
+}
+
 func GetOrderResponse(order entity.Order) OrderResponse {
 	var orderResponse OrderResponse
 	var itemsResponse []ItemResponse

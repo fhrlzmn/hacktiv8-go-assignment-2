@@ -45,6 +45,7 @@ func Init() *gin.Engine {
 		order := api.Group("/orders")
 		{
 			order.POST("/", orderHandler.Create)
+			order.GET("/", orderHandler.GetAll)
 			order.GET("/:orderId", orderHandler.GetById)
 			order.PUT("/:orderId", orderHandler.Update)
 			order.DELETE("/:orderId", orderHandler.Delete)

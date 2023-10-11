@@ -13,6 +13,7 @@ import (
 
 type OrderHandler interface {
 	Create(ctx *gin.Context)
+	GetAll(ctx *gin.Context)
 	GetById(ctx *gin.Context)
 	Update(ctx *gin.Context)
 	Delete(ctx *gin.Context)
@@ -33,7 +34,7 @@ func OrderHandlerInit(service service.OrderService) *OrderHandlerImpl {
 // @Accept json
 // @Produce json
 // @Param order body dto.OrderRequest true "Order Payload"
-// @Success 201 {object} entity.Order
+// @Success 201 {object} dto.OrderResponse
 // @Router /orders [post]
 func (oh *OrderHandlerImpl) Create(ctx *gin.Context) {
 	order := entity.Order{}
@@ -58,6 +59,24 @@ func (oh *OrderHandlerImpl) Create(ctx *gin.Context) {
 	response, err := oh.service.Create(order)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errs.InternalServerError("Failed to create order"))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+// Get All Orders godoc
+// @Summary Get all Orders
+// @Description Get all Orders
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Success 200 {object} []dto.OrdersResponse
+// @Router /orders [get]
+func (oh *OrderHandlerImpl) GetAll(ctx *gin.Context) {
+	response, err := oh.service.GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, errs.NotFound("Failed to get orders"))
 		return
 	}
 
@@ -102,7 +121,7 @@ func (oh *OrderHandlerImpl) GetById(ctx *gin.Context) {
 // @Produce json
 // @Param orderId path int true "Order ID"
 // @Param order body dto.OrderRequest true "Order Payload"
-// @Success 200 {object} entity.Order
+// @Success 200 {object} dto.OrderResponse
 // @Router /orders/{orderId} [put]
 func (oh *OrderHandlerImpl) Update(ctx *gin.Context) {
 	orderId := ctx.Param("orderId")
