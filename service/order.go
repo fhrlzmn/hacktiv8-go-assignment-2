@@ -11,6 +11,7 @@ import (
 type OrderService interface {
 	Create(order entity.Order, items []entity.Item) (*dto.ApiResponse[any], error)
 	GetById(orderId int) (*dto.ApiResponse[any], error)
+	Update(orderId int, order entity.Order) (*dto.ApiResponse[any], error)
 	Delete(orderId int) (*dto.ApiResponse[any], error)
 }
 
@@ -49,6 +50,21 @@ func (os *OrderServiceImpl) GetById(orderId int) (*dto.ApiResponse[any], error) 
 	response := dto.ApiResponse[any]{
 		StatusCode: http.StatusOK,
 		Message:    "Order retrieved successfully",
+		Data:       order,
+	}
+
+	return &response, nil
+}
+
+func (os *OrderServiceImpl) Update(orderId int, order entity.Order) (*dto.ApiResponse[any], error) {
+	order, err := os.orderRepository.Update(orderId, order)
+	if err != nil {
+		return nil, err
+	}
+
+	response := dto.ApiResponse[any]{
+		StatusCode: http.StatusOK,
+		Message:    "Order updated successfully",
 		Data:       order,
 	}
 

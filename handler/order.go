@@ -15,6 +15,7 @@ import (
 type OrderHandler interface {
 	Create(ctx *gin.Context)
 	GetById(ctx *gin.Context)
+	Update(ctx *gin.Context)
 	Delete(ctx *gin.Context)
 }
 
@@ -67,6 +68,33 @@ func (oh *OrderHandlerImpl) GetById(ctx *gin.Context) {
 	}
 
 	response, err := oh.service.GetById(orderIdInt)
+	if err != nil {
+		ctx.JSON(
+			http.StatusNotFound,
+			errs.NotFound("Order with ID "+orderId+" not found"),
+		)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (oh *OrderHandlerImpl) Update(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+
+	orderIdInt, err := strconv.Atoi(orderId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errs.BadRequest("Invalid order ID"))
+		return
+	}
+
+	var order entity.Order
+	if err := ctx.ShouldBindJSON(&order); err != nil {
+		ctx.JSON(http.StatusBadRequest, errs.BadRequest("Invalid request body"))
+		return
+	}
+
+	response, err := oh.service.Update(orderIdInt, order)
 	if err != nil {
 		ctx.JSON(
 			http.StatusNotFound,
