@@ -76,6 +76,10 @@ func (or *OrderRepositoryImpl) Update(
 			tx.Create(&item)
 		}
 
+		if err := tx.Preload("Items").First(&order, orderId).Error; err != nil {
+			return err
+		}
+
 		return nil
 	})
 

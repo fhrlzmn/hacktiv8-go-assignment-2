@@ -1,0 +1,166 @@
+basePath: /api
+definitions:
+  dto.ItemRequest:
+    properties:
+      description:
+        type: string
+      item_code:
+        type: string
+      quantity:
+        type: integer
+    required:
+    - description
+    - item_code
+    - quantity
+    type: object
+  dto.OrderRequest:
+    properties:
+      customer_name:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/dto.ItemRequest'
+        type: array
+      ordered_at:
+        example: "2021-01-01T00:00:00+07:00"
+        type: string
+    required:
+    - customer_name
+    - items
+    - ordered_at
+    type: object
+  entity.Item:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      item_code:
+        type: string
+      quantity:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  entity.Order:
+    properties:
+      created_at:
+        type: string
+      customer_name:
+        type: string
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/entity.Item'
+        type: array
+      ordered_at:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: fhrlzmn26@gmail.com
+    name: Fahrul Zaman
+  description: This is a sample server for Hacktiv8 Go Assignment 2 API Documentation.
+  license:
+    name: MIT
+    url: http://mit-license
+  termsOfService: https:/swagger.io/terms/
+  title: Hacktiv8 Go Assignment 2 API Documentation
+  version: 1.0.0
+paths:
+  /orders:
+    post:
+      consumes:
+      - application/json
+      description: Create an order with the input payload
+      parameters:
+      - description: Order Payload
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entity.Order'
+      summary: Create an order
+      tags:
+      - orders
+  /orders/{orderId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an order by id
+      parameters:
+      - description: Order ID
+        in: path
+        name: orderId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Delete an order
+      tags:
+      - orders
+    get:
+      consumes:
+      - application/json
+      description: Get an order by id
+      parameters:
+      - description: Order ID
+        in: path
+        name: orderId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Order'
+      summary: Get an order by id
+      tags:
+      - orders
+    put:
+      consumes:
+      - application/json
+      description: Update an order with the input payload
+      parameters:
+      - description: Order ID
+        in: path
+        name: orderId
+        required: true
+        type: integer
+      - description: Order Payload
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Order'
+      summary: Update an order
+      tags:
+      - orders
+swagger: "2.0"
